@@ -1,0 +1,51 @@
+include:
+  - project: uniprot/variation/protvar-deploy
+    ref: main
+    file: /ci-templates/gitlab-ci-template.yml
+
+variables:
+  UPSTREAM_CI_COMMIT_BRANCH: $CI_COMMIT_BRANCH
+
+stages:
+  - test
+  - build
+  - build_docker_image
+  - deploy
+
+.mvn:
+  image: dockerhub.ebi.ac.uk/uniprot/variation/protvar-deploy/cached/maven-3.9.9-eclipse-temurin-21-alpine
+  before_script:
+    - mvn --version
+
+test:
+  extends: .mvn
+  stage: test
+  script:
+    - mvn clean verify
+
+build:
+  only:
+    refs: [dev]
+  extends: .mvn
+  stage: build
+  script:
+    - mvn -DskipTests clean package
+    - mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+  artifacts:
+    expire_in: 2 days
+    paths:
+      - target/dependency
+
+build_docker_image:
+  only:
+    refs: [dev]
+  extends: .build_docker
+  stage: build_docker_image
+
+deploy_dev:
+  only:
+    refs: [dev]
+  extends: .deploy
+  stage: deploy
+  script:
+    - ./protvar-deploy/scripts/deploy.sh "${CI_COMMIT_REF_NAME}" "protvar-mcp" "${CI_COMMIT_SHORT_SHA}"
