@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.protvar.mcp.tools.FoldxTool;
+import uk.ac.ebi.protvar.mcp.tools.InteractionTool;
+import uk.ac.ebi.protvar.mcp.tools.PocketTool;
 
 @SpringBootApplication
 public class ProtvarMcpApplication {
@@ -15,9 +17,9 @@ public class ProtvarMcpApplication {
 	}
 
 	@Bean
-	public ToolCallbackProvider protvarTools(FoldxTool foldxTool) {
+	public ToolCallbackProvider protvarTools(FoldxTool foldxTool, PocketTool pocketTool, InteractionTool interactionTool) {
 		return MethodToolCallbackProvider.builder()
-				.toolObjects(foldxTool)
+				.toolObjects(foldxTool, pocketTool, interactionTool)
 				.build();
 	}
 }
