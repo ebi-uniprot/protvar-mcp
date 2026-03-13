@@ -45,6 +45,14 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+		<!-- Hot reload in local dev (excluded from production jar) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- Lombok (remove if not using @Data, @Slf4j etc.) -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
