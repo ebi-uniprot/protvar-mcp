@@ -155,6 +155,30 @@ The CI pipeline runs: `test → build → build_docker_image → deploy`
 
 The Kubernetes Ingress exposes the app at `/ProtVar` on the environment hostname. The Ingress is configured with extended proxy timeouts (`proxy-read-timeout: 3600`) to support long-lived Streamable HTTP connections.
 
+### URL Routing Chain (Deployed)
+
+Requests go through a load balancer (VTM) before reaching the app. The LB matches on path prefix and forwards the **full path** — it does not strip the prefix.
+
+```
+Browser/MCP client
+        │  GET https://wwwdev.ebi.ac.uk/ProtVar/mcp
+        ▼
+  VTM Load Balancer
+        │  prefix /ProtVar/mcp  → pool: w3-protvar-mcp  (this app)
+        │  prefix /ProtVar/api  → pool: w3-protvar-backend
+        │  prefix /ProtVar      → pool: w3-protvar-frontend
+        ▼
+  MCP Server (Spring Boot)
+        │  context-path: /ProtVar  (stripped by Spring)
+        │  remaining path: /mcp
+        │
+        ├─ /mcp          → MCP Streamable HTTP endpoint (SSE, requires Accept: text/event-stream)
+        ├─ /mcp/status   → StatusController (returns "ProtVar MCP Server is running")
+        └─ /mcp/actuator → Spring Actuator (health, info)
+```
+
+> **Note:** Opening `/ProtVar/mcp` in a browser returns `Invalid Accept header. Expected TEXT_EVENT_STREAM` — this is correct. The SSE endpoint requires an MCP client or `curl -H "Accept: text/event-stream"`.
+
 ---
 
 ## Project Structure
