@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StatusController {
 
-    @GetMapping("/status")
+    @GetMapping("/mcp/status")
     public String home() {
         return "ProtVar MCP Server is running";
     }
