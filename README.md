@@ -126,6 +126,8 @@ For **Claude.ai** (the web product), add it as a remote connector via **Settings
 
 This project uses **Streamable HTTP** transport so the same server can be used locally during development and deployed to Kubernetes for production use, with no configuration changes to the server itself.
 
+It runs in **stateless** mode (`spring.ai.mcp.server.protocol=STATELESS`): each request is self-contained — no `Mcp-Session-Id`, no server-side session state — which keeps it simple to scale and run behind a load balancer. "Stateless" is a mode of the Streamable HTTP transport, not a different transport.
+
 ---
 
 ## Key Dependencies

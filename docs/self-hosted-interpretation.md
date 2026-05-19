@@ -17,11 +17,9 @@ For a given variant (e.g. `P04637 R175H`), the MCP tools return:
 | `getFoldx` | ΔΔG (kcal/mol), wild-type/mutant AA, pLDDT confidence |
 | `getPockets` | Pocket score, buriedness, radius of gyration, residues |
 | `getInteractions` | Interaction partners, interface residues, pDockQ confidence |
-| `getFunction` | Functional annotations, consequences, UniProt features |
-| `getStructure` | PDB structure mappings, resolution, chain/position |
-| `getScores` | Conservation, EVE, ESM1b, AlphaMissense pathogenicity scores |
-| `getPopulationObservation` | Co-located variants from gnomAD and other population databases |
-| `getAlleleFreq` | Allele frequency at a genomic position |
+| `getFunction` | UniProt features, plus pathogenicity scores (Conservation, EVE, ESM1b, AlphaMissense) where available |
+| `getStructure` | PDB structure mappings, chain/position |
+| `getPopulation` | Co-located variants from population databases (gnomAD, dbSNP, ClinVar, COSMIC) |
 | `mapVariant` / `mapVariants` | Full coordinate mapping and annotations for one or more variants |
 
 See [TOOLS.md](TOOLS.md) for the complete reference. The structural and functional outputs (FoldX, pockets, interactions) are the most relevant for the self-hosted interpretation pipeline described here, as they produce structured numerical data well-suited to rule-based pre-processing before an LLM sees them.
@@ -85,8 +83,7 @@ Variant Input (e.g. P04637 R175H)
   ├── getFoldx        → ΔΔG, pLDDT
   ├── getPockets      → pocket score, buriedness, residues
   ├── getInteractions → pDockQ scores, partner proteins
-  ├── getScores       → EVE, ESM1b, AlphaMissense, Conservation
-  └── getFunction     → consequences, UniProt features
+  └── getFunction     → UniProt features + pathogenicity scores (EVE, ESM1b, AlphaMissense, Conservation)
         │
         ▼
   Rule-based interpretation layer
