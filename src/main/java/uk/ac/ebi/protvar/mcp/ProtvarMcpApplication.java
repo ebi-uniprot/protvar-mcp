@@ -5,9 +5,11 @@ import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import uk.ac.ebi.protvar.mcp.tools.FoldxTool;
-import uk.ac.ebi.protvar.mcp.tools.InteractionTool;
-import uk.ac.ebi.protvar.mcp.tools.PocketTool;
+import uk.ac.ebi.protvar.mcp.tools.AnnotationTool;
+import uk.ac.ebi.protvar.mcp.tools.BatchMappingTool;
+import uk.ac.ebi.protvar.mcp.tools.MappingTool;
+import uk.ac.ebi.protvar.mcp.tools.PredictionTool;
+import uk.ac.ebi.protvar.mcp.tools.SearchTool;
 
 @SpringBootApplication
 public class ProtvarMcpApplication {
@@ -17,9 +19,13 @@ public class ProtvarMcpApplication {
 	}
 
 	@Bean
-	public ToolCallbackProvider protvarTools(FoldxTool foldxTool, PocketTool pocketTool, InteractionTool interactionTool) {
+	public ToolCallbackProvider protvarTools(MappingTool mappingTool,
+											 BatchMappingTool batchMappingTool,
+											 AnnotationTool annotationTool,
+											 PredictionTool predictionTool,
+											 SearchTool searchTool) {
 		return MethodToolCallbackProvider.builder()
-				.toolObjects(foldxTool, pocketTool, interactionTool)
+				.toolObjects(mappingTool, batchMappingTool, annotationTool, predictionTool, searchTool)
 				.build();
 	}
 }

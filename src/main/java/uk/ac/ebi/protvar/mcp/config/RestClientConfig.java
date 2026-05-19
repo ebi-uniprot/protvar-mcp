@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class RestClientConfig {
 
     @Bean
-    public RestClient protvarClient(@Value("${protvar.api.base-url}") String baseUrl) {
+    public RestClient restClient(@Value("${protvar.api.base-url}") String baseUrl) {
         return RestClient.builder()
                 .baseUrl(baseUrl)
                 .requestFactory(new SimpleClientHttpRequestFactory())

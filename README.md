@@ -68,7 +68,7 @@ java -jar target/protvar-mcp-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
 The app exposes a health endpoint via Spring Actuator:
 
 ```
-http://localhost:8081/ProtVar/actuator/health
+http://localhost:8081/ProtVar/mcp/actuator/health
 ```
 
 Expected response: `{"status":"UP"}`
@@ -172,12 +172,10 @@ Browser/MCP client
         │  context-path: /ProtVar  (stripped by Spring)
         │  remaining path: /mcp
         │
-        ├─ /mcp          → MCP Streamable HTTP endpoint (SSE, requires Accept: text/event-stream)
+        ├─ /mcp          → MCP Streamable HTTP endpoint (requires MCP client)
         ├─ /mcp/status   → StatusController (returns "ProtVar MCP Server is running")
         └─ /mcp/actuator → Spring Actuator (health, info)
 ```
-
-> **Note:** Opening `/ProtVar/mcp` in a browser returns `Invalid Accept header. Expected TEXT_EVENT_STREAM` — this is correct. The SSE endpoint requires an MCP client or `curl -H "Accept: text/event-stream"`.
 
 ---
 
@@ -187,11 +185,16 @@ Browser/MCP client
 src/
 └── main/
     └── java/uk/ac/ebi/protvar/mcp/
-        ├── ProtvarMcpApplication.java   # Entry point, registers MCP tools
+        ├── ProtvarMcpApplication.java        # Entry point, registers all tools
         ├── config/
-        │   └── RestClientConfig.java    # RestClient bean pointing to ProtVar API
+        │   └── RestClientConfig.java         # RestClient bean pointing to ProtVar API
         └── tools/
-            └── FoldxTool.java           # @Tool: FoldX predictions
+            ├── ProtvarClient.java            # Shared HTTP wrapper (graceful 404 handling)
+            ├── MappingTool.java              # mapVariant (single variant)
+            ├── BatchMappingTool.java          # mapVariants (one or more variants)
+            ├── AnnotationTool.java           # getFunction, getPopulation, getStructure
+            ├── PredictionTool.java           # getFoldx, getPockets, getInteractions
+            └── SearchTool.java               # semanticSearch, searchVariants
 resources/
 ├── application.properties              # Base config (port, MCP path, context path)
 ├── application-dev.properties          # dev API URL
@@ -200,32 +203,6 @@ resources/
 
 ---
 
-## Adding New Tools
+## Tools
 
-1. Create a new `@Component` class in `tools/`
-2. Annotate methods with `@Tool(description = "...")`
-3. Register the bean in `ProtvarMcpApplication`:
-
-```java
-@Bean
-public ToolCallbackProvider protvarTools(FoldxTool foldxTool, MyNewTool myNewTool) {
-    return MethodToolCallbackProvider.builder()
-            .toolObjects(foldxTool, myNewTool)
-            .build();
-}
-```
-
-## Future Improvement (very useful)
-Instead of calling the API via HTTP, you can create a shared library:
-```
-protvar-common
-```
-Then both apps share logic.
-```
-protvar-api
-protvar-mcp
-        ↓
-    protvar-common
-```
-
-This avoids HTTP overhead.
+See [docs/TOOLS.md](docs/TOOLS.md) for the full tool reference — descriptions, parameters, and configuration.
