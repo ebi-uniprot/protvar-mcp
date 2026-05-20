@@ -25,7 +25,7 @@ test:
 
 build:
   only:
-    refs: [dev]
+    refs: [int, dev, main]
   extends: .mvn
   stage: build
   script:
@@ -38,14 +38,31 @@ build:
 
 build_docker_image:
   only:
-    refs: [dev]
+    refs: [int, dev, main]
   extends: .build_docker
   stage: build_docker_image
+
+deploy_int:
+  only:
+    refs: [int]
+  extends: .deploy
+  stage: deploy
+  script:
+    - ./protvar-deploy/scripts/deploy.sh "${CI_COMMIT_REF_NAME}" "protvar-mcp" "${CI_COMMIT_SHORT_SHA}"
 
 deploy_dev:
   only:
     refs: [dev]
   extends: .deploy
   stage: deploy
+  script:
+    - ./protvar-deploy/scripts/deploy.sh "${CI_COMMIT_REF_NAME}" "protvar-mcp" "${CI_COMMIT_SHORT_SHA}"
+
+deploy_main:
+  only:
+    refs: [main]
+  extends: .deploy
+  stage: deploy
+  when: manual  # manual gate for public/live deploy
   script:
     - ./protvar-deploy/scripts/deploy.sh "${CI_COMMIT_REF_NAME}" "protvar-mcp" "${CI_COMMIT_SHORT_SHA}"
