@@ -84,7 +84,7 @@ FoldX stability predictions (ΔΔG) for a protein variant, from AlphaFold DB str
 | `position` | integer | yes | Residue position (UniProt numbering) |
 | `variantAA` | string | no | Variant amino acid, 1- or 3-letter code |
 
-**Endpoint:** `GET /prediction/foldx/{accession}/{position}?variantAA={variantAA}`
+**Endpoint:** `GET /prediction/{accession}/{position}?include=foldx&variantAA={variantAA}`
 
 ### `getPockets`
 Predicted ligand-binding pockets near a residue (AlphaFold DB structures, AutoSite detection).
@@ -94,7 +94,7 @@ Predicted ligand-binding pockets near a residue (AlphaFold DB structures, AutoSi
 | `accession` | string | yes | UniProt protein accession |
 | `resid` | integer | yes | Residue position (UniProt numbering) |
 
-**Endpoint:** `GET /prediction/pocket/{accession}/{resid}`
+**Endpoint:** `GET /prediction/{accession}/{resid}?include=pocket`
 
 ### `getInteractions`
 Predicted protein–protein interaction interfaces for a residue.
@@ -104,7 +104,7 @@ Predicted protein–protein interaction interfaces for a residue.
 | `accession` | string | yes | UniProt protein accession |
 | `resid` | integer | yes | Residue position (UniProt numbering) |
 
-**Endpoint:** `GET /prediction/interaction/{accession}/{resid}`
+**Endpoint:** `GET /prediction/{accession}/{resid}?include=interface`
 
 ---
 

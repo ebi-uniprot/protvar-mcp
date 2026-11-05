@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/** Predictions at a protein position, from the API's one /prediction/{accession}/{position} endpoint (include=…). */
 @Component
 public class PredictionTool {
 
@@ -31,7 +32,8 @@ public class PredictionTool {
             String variantAA) {
 
         return client.get(uriBuilder -> uriBuilder
-                .path("/prediction/foldx/{a}/{p}")
+                .path("/prediction/{a}/{p}")
+                .queryParam("include", "foldx")
                 .queryParamIfPresent("variantAA",
                         Optional.ofNullable(variantAA).filter(s -> !s.isBlank()))
                 .build(accession, position));
@@ -49,7 +51,7 @@ public class PredictionTool {
             @ToolParam(description = "Protein residue position using UniProt numbering")
             Integer resid) {
 
-        return client.get("/prediction/pocket/{a}/{r}", accession, resid);
+        return client.get("/prediction/{a}/{r}?include=pocket", accession, resid);
     }
 
     @Tool(description = """
@@ -64,6 +66,6 @@ public class PredictionTool {
             @ToolParam(description = "Protein residue position using UniProt numbering")
             Integer resid) {
 
-        return client.get("/prediction/interaction/{a}/{r}", accession, resid);
+        return client.get("/prediction/{a}/{r}?include=interface", accession, resid);
     }
 }
