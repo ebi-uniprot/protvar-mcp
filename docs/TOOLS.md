@@ -38,15 +38,25 @@ Map one or more variants at once. Submits a batch job and polls for results.
 Residue-level annotation — broader than the prediction tools below.
 
 ### `getFunction`
-Functional annotations for a residue: UniProt features (domains, regions, sites, PTMs), plus pathogenicity predictions/scores where available.
+UniProt functional annotations for a residue: features (domains, regions, sites, PTMs) and the protein's comments. Predictions and scores: `getPredictions`.
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `accession` | string | yes | UniProt protein accession |
 | `position` | integer | yes | Residue position (UniProt numbering) |
-| `variantAA` | string | no | Variant amino acid, 1-letter code |
 
-**Endpoint:** `GET /function/{accession}/{position}?variantAA={variantAA}`
+**Endpoint:** `GET /function/{accession}/{position}`
+
+### `getPredictions`
+Everything predicted at a residue in one call: conservation, pockets, interfaces, and per variant amino acid AlphaMissense, popEVE, ESM1b, EVE, FoldX and Missense3D.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `accession` | string | yes | UniProt protein accession |
+| `position` | integer | yes | Residue position (UniProt numbering) |
+| `variantAA` | string | no | Variant amino acid (1- or 3-letter); narrows the variant-level scores |
+
+**Endpoint:** `GET /prediction/{accession}/{position}?variantAA={variantAA}`
 
 ### `getPopulation`
 Other variants co-located at the same residue — population observations and known variants (dbSNP, ClinVar, COSMIC).

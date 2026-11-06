@@ -195,7 +195,7 @@ src/
             ├── MappingTool.java              # mapVariant (single variant)
             ├── BatchMappingTool.java          # mapVariants (one or more variants)
             ├── AnnotationTool.java           # getFunction, getPopulation, getStructure
-            ├── PredictionTool.java           # getFoldx, getPockets, getInteractions
+            ├── PredictionTool.java           # getPredictions, getFoldx, getPockets, getInteractions
             └── SearchTool.java               # semanticSearch, searchVariants
 resources/
 ├── application.properties              # Base config (port, MCP path, context path)

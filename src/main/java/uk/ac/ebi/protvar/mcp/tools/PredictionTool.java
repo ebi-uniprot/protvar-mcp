@@ -17,6 +17,29 @@ public class PredictionTool {
     }
 
     @Tool(description = """
+            Retrieve everything predicted at a protein residue in one call: conservation,
+            predicted pockets and protein-protein interfaces, and per variant amino acid
+            AlphaMissense, popEVE, ESM1b, EVE, FoldX stability and Missense3D. Give
+            variantAA to get the scores for one substitution only.
+            """)
+    public String getPredictions(
+            @ToolParam(description = "UniProt protein accession (e.g. Q9NUW8)")
+            String accession,
+
+            @ToolParam(description = "Protein residue position using UniProt numbering (e.g. 493)")
+            Integer position,
+
+            @ToolParam(required = false, description = "Optional amino acid variant at this position (1-letter or 3-letter code, e.g. R or Arg)")
+            String variantAA) {
+
+        return client.get(uriBuilder -> uriBuilder
+                .path("/prediction/{a}/{p}")
+                .queryParamIfPresent("variantAA",
+                        Optional.ofNullable(variantAA).filter(s -> !s.isBlank()))
+                .build(accession, position));
+    }
+
+    @Tool(description = """
             Retrieve FoldX stability predictions (ΔΔG values) for a protein variant.
             Uses AlphaFold DB structures and FoldX calculations to estimate the energetic
             impact of amino acid substitutions on protein stability.

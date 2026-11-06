@@ -17,7 +17,8 @@ For a given variant (e.g. `P04637 R175H`), the MCP tools return:
 | `getFoldx` | ΔΔG (kcal/mol), wild-type/mutant AA, pLDDT confidence |
 | `getPockets` | Pocket score, buriedness, radius of gyration, residues |
 | `getInteractions` | Interaction partners, interface residues, pDockQ confidence |
-| `getFunction` | UniProt features, plus pathogenicity scores (Conservation, EVE, ESM1b, AlphaMissense) where available |
+| `getPredictions` | All predictions in one call: conservation, AlphaMissense, popEVE, ESM1b, EVE, FoldX, Missense3D, pockets, interfaces |
+| `getFunction` | UniProt features and comments |
 | `getStructure` | PDB structure mappings, chain/position |
 | `getPopulation` | Co-located variants from population databases (gnomAD, dbSNP, ClinVar, COSMIC) |
 | `mapVariant` / `mapVariants` | Full coordinate mapping and annotations for one or more variants |
@@ -83,7 +84,8 @@ Variant Input (e.g. P04637 R175H)
   ├── getFoldx        → ΔΔG, pLDDT
   ├── getPockets      → pocket score, buriedness, residues
   ├── getInteractions → pDockQ scores, partner proteins
-  └── getFunction     → UniProt features + pathogenicity scores (EVE, ESM1b, AlphaMissense, Conservation)
+  ├── getPredictions  → AlphaMissense, popEVE, ESM1b, EVE, conservation (+ all of the above in one call)
+  └── getFunction     → UniProt features and comments
         │
         ▼
   Rule-based interpretation layer

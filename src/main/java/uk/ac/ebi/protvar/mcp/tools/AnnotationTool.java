@@ -21,26 +21,20 @@ public class AnnotationTool {
     }
 
     @Tool(description = """
-            Retrieve functional annotations for a protein residue: UniProt features
+            Retrieve UniProt functional annotations for a protein residue: features
             (domains, regions, sites, post-translational modifications) overlapping
-            the position, plus pathogenicity predictions and scores where available.
-            Broader than the prediction-specific tools.
+            the position, and the protein's comments (function, catalytic activity,
+            subcellular location, interactions). For predictions and scores at the
+            position use getPredictions.
             """)
     public String getFunction(
             @ToolParam(description = "UniProt protein accession (e.g. Q9NUW8)")
             String accession,
 
             @ToolParam(description = "Protein residue position using UniProt numbering")
-            Integer position,
+            Integer position) {
 
-            @ToolParam(required = false, description = "Optional amino acid variant at this position (1-letter code, e.g. R)")
-            String variantAA) {
-
-        return client.get(uriBuilder -> uriBuilder
-                .path("/function/{a}/{p}")
-                .queryParamIfPresent("variantAA",
-                        Optional.ofNullable(variantAA).filter(s -> !s.isBlank()))
-                .build(accession, position));
+        return client.get("/function/{a}/{p}", accession, position);
     }
 
     @Tool(description = """
